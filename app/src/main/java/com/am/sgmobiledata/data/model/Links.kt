@@ -6,8 +6,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-data class Links
-    (
+data class Links(
     @ColumnInfo(name = "next")
     @SerializedName("next")
     var next: String? = null,

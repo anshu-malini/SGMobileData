@@ -7,8 +7,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "records_Item")
-data class RecordsItem
-    (
+data class RecordsItem(
     @PrimaryKey(autoGenerate = true)
     var _autoIdRecordsItem: Long = 0,
 

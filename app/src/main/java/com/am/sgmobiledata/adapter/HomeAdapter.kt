@@ -4,16 +4,17 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.am.sgmobiledata.data.model.EntityYear
 import com.am.sgmobiledata.data.model.RecordsItem
 import com.am.sgmobiledata.databinding.HomeListItemBinding
 import javax.inject.Inject
 
 class HomeAdapter @Inject constructor() :
     RecyclerView.Adapter<HomeAdapter.MainViewHolder>() {
-    var onItemClick: ((RecordsItem) -> Unit)? = null
-    var aList = mutableListOf<RecordsItem>()
+    var onItemClick: ((EntityYear) -> Unit)? = null
+    var aList = mutableListOf<EntityYear>()
 
-    fun setItemList(aList: MutableList<RecordsItem>) {
+    fun setItemList(aList: MutableList<EntityYear>) {
         this.aList = aList
         notifyDataSetChanged()
     }
@@ -27,8 +28,9 @@ class HomeAdapter @Inject constructor() :
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val item = aList[position]
-        holder.binding.name.text = "${position + 1}. " + item.quarter
-        holder.binding.shortName.text = item.volumeOfMobileData
+        holder.binding.yearName.text = "${position + 1}. Year: ${item.yearName}"
+        holder.binding.volume.text = "Total Data: ${String.format("%.4f", item.volumePerYear)}"
+
         when (position % 6) {
             0 -> holder.binding.itemLayout.setBackgroundColor(Color.parseColor("#f0fff0"))
             1 -> holder.binding.itemLayout.setBackgroundColor(Color.parseColor("#fff0f5"))
@@ -36,7 +38,6 @@ class HomeAdapter @Inject constructor() :
             3 -> holder.binding.itemLayout.setBackgroundColor(Color.parseColor("#ffe4e1"))
             4 -> holder.binding.itemLayout.setBackgroundColor(Color.parseColor("#e6e6fa"))
             5 -> holder.binding.itemLayout.setBackgroundColor(Color.parseColor("#fffafa"))
-
         }
 
     }

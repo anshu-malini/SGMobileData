@@ -2,14 +2,12 @@ package com.am.sgmobiledata.data.room
 
 import android.content.Context
 import androidx.room.*
-import com.am.sgmobiledata.data.model.FieldsItem
-import com.am.sgmobiledata.data.model.Links
-import com.am.sgmobiledata.data.model.RecordsItem
-import com.am.sgmobiledata.data.model.Result
+import com.am.sgmobiledata.data.model.*
 
 
 @Database(
-    entities = [(Result::class), (RecordsItem::class), (FieldsItem::class)],
+    entities = [(Result::class), (RecordsItem::class), (FieldsItem::class),
+        (EntityYear::class), (EntityQuarter::class)],
     version = 1,
     exportSchema = false
 )

@@ -27,11 +27,14 @@ data class Result(
     var resourceId: String? = null,
 
     @SerializedName("fields")
-    var fields: MutableList<FieldsItem?>? = null
+    var fields: MutableList<FieldsItem?>? = null,
+
+    @SerializedName("_year")
+    var years: MutableList<EntityYear>? = null
 ) {
-    constructor() : this(0, 0, null, Links(), 0, null, null)
+    constructor() : this(0, 0, null, Links(), 0, null, null, null)
 
     override fun toString(): String {
-        return "Result(_autoId=$_autoId, total=$total, records=$records, links=$links, limit=$limit, resourceId=$resourceId, fields=$fields)"
+        return "Result(_autoId=$_autoId, total=$total, records=$records, links=$links, limit=$limit, resourceId=$resourceId, fields=$fields, years=$years)"
     }
 }

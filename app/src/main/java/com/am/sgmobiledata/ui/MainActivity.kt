@@ -2,6 +2,8 @@ package com.am.sgmobiledata.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     private fun setListener() {
         adapter.onItemClick =
             { recordsItem ->
-                Toast.makeText(this, "Item clicked", LENGTH_SHORT).show()
+                Toast.makeText(this, "Item clicked: ${recordsItem.yearName}", LENGTH_SHORT).show()
                 startActivity(Intent(this, DetailsActivity::class.java))
             }
     }
@@ -61,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             when (it.status) {
                 NetworkResult.Status.SUCCESS -> {
                     binding.swipeRefreshLayout.isRefreshing = false
-                    if (it.data != null) adapter.setItemList(it.data.records!!)
+                    if (it.data != null) adapter.setItemList(it.data.years!!)
                 }
                 NetworkResult.Status.ERROR -> {
                     Toast.makeText(this, "Network.Status.ERROR", LENGTH_SHORT).show()
