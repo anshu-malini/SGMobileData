@@ -1,11 +1,14 @@
 package com.am.sgmobiledata.data.model
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "fields_Item")
 data class FieldsItem(
     @PrimaryKey(autoGenerate = true)
@@ -18,7 +21,7 @@ data class FieldsItem(
     @ColumnInfo(name = "type")
     @SerializedName("type")
     var type: String? = null
-) {
+) : Parcelable {
     constructor() : this(0, "", "")
 
     override fun toString(): String {

@@ -1,8 +1,11 @@
 package com.am.sgmobiledata.data.model
 
+import android.os.Parcelable
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "Mobile_Data_Table")
 data class Result(
     @PrimaryKey(autoGenerate = true) var _autoId: Int = 0,
@@ -31,7 +34,7 @@ data class Result(
 
     @SerializedName("_year")
     var years: MutableList<EntityYear>? = null
-) {
+): Parcelable {
     constructor() : this(0, 0, null, Links(), 0, null, null, null)
 
     override fun toString(): String {

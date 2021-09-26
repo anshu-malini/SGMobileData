@@ -1,54 +1,110 @@
 package com.am.sgmobiledata.ui
 
 import android.os.Bundle
+import android.view.MenuItem
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.am.sgmobiledata.R
+import com.am.sgmobiledata.data.model.EntityYear
+import com.am.sgmobiledata.databinding.DetailsActivityScreenBinding
+import com.am.sgmobiledata.utils.INTENT_YEARS_BUNDLE
+import com.am.sgmobiledata.utils.INTENT_YEARS_ID
+import com.am.sgmobiledata.utils.INTENT_YEAR_POS
 import dagger.hilt.android.AndroidEntryPoint
 
-private const val NUM_PAGES = 5
-@AndroidEntryPoint
-class DetailsActivity  : FragmentActivity() {
 
-    /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
-    private lateinit var mPager: ViewPager
+@AndroidEntryPoint
+class DetailsActivity : AppCompatActivity() {
+
+    private lateinit var binding: DetailsActivityScreenBinding
+    private var actionBar: ActionBar? = null
+    private lateinit var yearList: MutableList<EntityYear>
+    private var yearPos: Int = 0
+    private var numPages = 1
+    private var lastPos: Int = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_details_screen)
+        binding = DetailsActivityScreenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        initialize()
 
-        // Instantiate a ViewPager and a PagerAdapter.
-        mPager = findViewById(R.id.pager)
-
-        // The pager adapter, which provides the pages to the view pager widget.
         val pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
-        mPager.adapter = pagerAdapter
+        binding.pager.adapter = pagerAdapter
     }
 
-    override fun onBackPressed() {
-        if (mPager.currentItem == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed()
-        } else {
-            // Otherwise, select the previous step.
-            mPager.currentItem = mPager.currentItem - 1
+    private fun initialize() {
+        actionBar = supportActionBar
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+
+        if (intent.extras != null) {
+            if (intent.hasExtra(INTENT_YEARS_BUNDLE)) {
+                yearList =
+                    intent.getParcelableArrayListExtra<EntityYear>(INTENT_YEARS_BUNDLE) as ArrayList<EntityYear>
+                if (!yearList.isNullOrEmpty()) {
+                    numPages = yearList.size
+                }
+            }
+            if (intent.hasExtra(INTENT_YEAR_POS))
+                yearPos = intent.getIntExtra(INTENT_YEAR_POS, 0)
+
         }
+        binding.pager.setCurrentItem(yearPos, false)
+        binding.pager.offscreenPageLimit = 1
+        binding.pager.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                when {
+                    (yearPos < yearList.size - 1) && lastPos < position -> {
+                        yearPos = yearPos.plus(1)
+                    }
+                    (yearPos > -1) && lastPos > position -> {
+                        yearPos = yearPos.minus(1)
+                    }
+                }
+                lastPos = position
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+        })
     }
 
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
-    private inner class ScreenSlidePagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
-        override fun getCount(): Int = NUM_PAGES
+    fun setTitle(title: String) {
+        actionBar?.title = title
+    }
 
-        override fun getItem(position: Int): Fragment = DetailsFragment()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    private inner class ScreenSlidePagerAdapter(fm: FragmentManager) :
+        FragmentStatePagerAdapter(fm) {
+        override fun getCount(): Int = numPages
+
+        override fun getItem(position: Int): Fragment {
+            val bundle = Bundle().apply {
+                putInt(INTENT_YEARS_ID, yearList[yearPos!!]._yearId)
+            }
+            return DetailsFragment().apply { arguments = bundle }
+        }
     }
 }

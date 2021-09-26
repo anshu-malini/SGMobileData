@@ -14,8 +14,8 @@ interface MobileDataDao {
     @Query("SELECT * FROM Year_Entity")
     fun getAllYearLogs(): MutableList<EntityYear>
 
-//    @Query("SELECT * FROM Mobile_Data_Table where _idRecordsItem=:id")
-//    fun getRecord(id: Int): LiveData<RecordsItem>
+    @Query("SELECT * FROM Year_Entity where _yearId=:yearId")
+    fun getYearLogs(yearId: Int): LiveData<EntityYear>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(items: Result?)
@@ -24,10 +24,10 @@ interface MobileDataDao {
     fun insertAllYear(items: MutableList<EntityYear>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertYear(items: EntityYear)
+    fun insertYear(item: EntityYear)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertQuarter(items: EntityQuarter)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertQuarter(item: EntityQuarter)
 
     @Query("DELETE FROM Mobile_Data_Table")
     fun deleteAll()

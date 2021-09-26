@@ -5,10 +5,14 @@
       <map>
         <entry key="..\:/SgMobileData/app/src/main/res/layout/activity_details_screen.xml" value="0.15670289855072464" />
         <entry key="..\:/SgMobileData/app/src/main/res/layout/activity_main.xml" value="0.16168478260869565" />
-        <entry key="..\:/SgMobileData/app/src/main/res/layout/fragment_details_screen.xml" value="0.1" />
+        <entry key="..\:/SgMobileData/app/src/main/res/layout/details_activity_screen.xml" value="0.11413043478260869" />
+        <entry key="..\:/SgMobileData/app/src/main/res/layout/details_fragment_screen.xml" value="0.11413043478260869" />
+        <entry key="..\:/SgMobileData/app/src/main/res/layout/details_quater_list_item.xml" value="0.11413043478260869" />
+        <entry key="..\:/SgMobileData/app/src/main/res/layout/fragment_details_screen.xml" value="0.15" />
         <entry key="..\:/SgMobileData/app/src/main/res/layout/fragment_screen_slide_page.xml" value="0.15670289855072464" />
         <entry key="..\:/SgMobileData/app/src/main/res/layout/home_activity.xml" value="0.15670289855072464" />
         <entry key="..\:/SgMobileData/app/src/main/res/layout/home_list_item.xml" value="0.151268115942029" />
+        <entry key="..\:/SgMobileData/app/src/main/res/layout/quater_list_item.xml" value="0.17481884057971014" />
         <entry key="..\:/SgMobileData/app/src/main/res/layout/venue_list_item.xml" value="0.15670289855072464" />
       </map>
     </option>

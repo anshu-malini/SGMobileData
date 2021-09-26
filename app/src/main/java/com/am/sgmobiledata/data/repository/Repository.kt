@@ -14,13 +14,13 @@ class Repository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: MobileDataDao
 ) {
-//    fun getData(id: Int) = performGetOperation(
-//        databaseQuery = { localDataSource.getRecord(id) },
-//        networkCall = { remoteDataSource.getAllDataUsage() },
-//        saveCallResult = {
-//            localDataSource.insert(it.result?.records?.get(id))
-//        }
-//    )
+    fun getData(yearId: Int) = performGetOperation(
+        databaseQuery = { localDataSource.getYearLogs(yearId) },
+        networkCall = { remoteDataSource.getAllDataUsage() },
+        saveCallResult = {
+//            localDataSource.insert()
+        }
+    )
 
     fun getAllData() = performGetOperation(
         databaseQuery = { localDataSource.getAllRecords() },
@@ -48,6 +48,7 @@ class Repository @Inject constructor(
                     newQuarter.volumePerQuarter =
                         record.volumeOfMobileData?.toDouble()
                     newQuarter.quarterId = record.id
+                    dao.insertQuarter(newQuarter)
 
                     firstYearEntry.quarter = mutableListOf(EntityQuarter())
                     firstYearEntry.quarter?.add(newQuarter)
@@ -71,6 +72,7 @@ class Repository @Inject constructor(
                                     newQuarter.volumePerQuarter =
                                         record.volumeOfMobileData?.toDouble()
                                     newQuarter.quarterId = record.id
+                                    dao.insertQuarter(newQuarter)
 
                                     entityObj.quarter?.also {
                                         it.add(newQuarter)
@@ -88,6 +90,7 @@ class Repository @Inject constructor(
                         newYearQuarter.volumePerQuarter =
                             record.volumeOfMobileData?.toDouble()
                         newYearQuarter.quarterId = record.id
+                        dao.insertQuarter(newYearQuarter)
 
                         newYear.quarter = mutableListOf(EntityQuarter())
                         newYear.quarter?.add(newYearQuarter)

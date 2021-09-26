@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class HomeAdapter @Inject constructor() :
     RecyclerView.Adapter<HomeAdapter.MainViewHolder>() {
-    var onItemClick: ((EntityYear) -> Unit)? = null
+    var onItemClick: ((EntityYear, Int) -> Unit)? = null
     var aList = mutableListOf<EntityYear>()
 
     fun setItemList(aList: MutableList<EntityYear>) {
@@ -30,7 +30,6 @@ class HomeAdapter @Inject constructor() :
         val item = aList[position]
         holder.binding.yearName.text = "${position + 1}. Year: ${item.yearName}"
         holder.binding.volume.text = "Total Data: ${String.format("%.4f", item.volumePerYear)}"
-
         when (position % 6) {
             0 -> holder.binding.itemLayout.setBackgroundColor(Color.parseColor("#f0fff0"))
             1 -> holder.binding.itemLayout.setBackgroundColor(Color.parseColor("#fff0f5"))
@@ -49,7 +48,12 @@ class HomeAdapter @Inject constructor() :
     inner class MainViewHolder(val binding: HomeListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.itemRoot.setOnClickListener { onItemClick?.invoke(aList[adapterPosition]) }
+            binding.itemRoot.setOnClickListener {
+                onItemClick?.invoke(
+                    aList[adapterPosition],
+                    adapterPosition
+                )
+            }
         }
     }
 }
