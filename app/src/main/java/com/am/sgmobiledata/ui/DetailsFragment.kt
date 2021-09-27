@@ -70,7 +70,6 @@ class DetailsFragment : Fragment() {
         binding.volumeDataText.text = "${String.format("%.4f", year.volumePerYear)}"
         val includedView = binding.linLayout
 
-//        includedView.removeAllViews()
         val quarterList = year.quarter
         if (!quarterList.isNullOrEmpty()) {
             for (quarter in quarterList) {
