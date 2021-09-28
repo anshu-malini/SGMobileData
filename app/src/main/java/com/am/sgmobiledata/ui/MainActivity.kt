@@ -6,11 +6,13 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Parcelable
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.am.sgmobiledata.R
 import com.am.sgmobiledata.adapter.HomeAdapter
 import com.am.sgmobiledata.data.repository.Repository
 import com.am.sgmobiledata.databinding.HomeActivityBinding
@@ -37,12 +39,11 @@ class MainActivity : AppCompatActivity() {
         binding = HomeActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            binding.swipeRefreshLayout.isRefreshing = false
-        }
+        binding.recyclerView.adapter = adapter
+
         initialize()
         setListener()
-        setObserver()
+
     }
 
     private fun initialize() {
@@ -50,14 +51,12 @@ class MainActivity : AppCompatActivity() {
         viewModel =
             ViewModelProvider(this, vmFactory).get(MainViewModel::class.java)
 
-        binding.recyclerView.adapter = adapter
+        setObserver()
     }
 
     private fun setListener() {
         adapter.onItemClick =
             { recordsItem, itemPos ->
-                Log.e("ANSHU: MainActivity", "Item clicked: ${recordsItem.yearName}")
-
                 val bundle = Bundle().apply {
                     putInt(INTENT_YEAR_POS, itemPos)
                     putParcelableArrayList(
@@ -75,16 +74,16 @@ class MainActivity : AppCompatActivity() {
         viewModel.response.observe(this, Observer {
             when (it.status) {
                 NetworkResult.Status.SUCCESS -> {
-                    binding.swipeRefreshLayout.isRefreshing = false
+                    binding.progressbar.visibility = View.GONE
                     if (it.data != null) adapter.setItemList(it.data.years!!)
                 }
                 NetworkResult.Status.ERROR -> {
-                    Toast.makeText(this, "Network.Status.ERROR", LENGTH_SHORT).show()
-                    binding.swipeRefreshLayout.isRefreshing = false
+                    Toast.makeText(this, getString(R.string.network_error), LENGTH_SHORT).show()
+                    binding.progressbar.visibility = View.GONE
 
                 }
                 NetworkResult.Status.LOADING -> {
-                    binding.swipeRefreshLayout.isRefreshing = true
+                    binding.progressbar.visibility = View.VISIBLE
                 }
             }
         })

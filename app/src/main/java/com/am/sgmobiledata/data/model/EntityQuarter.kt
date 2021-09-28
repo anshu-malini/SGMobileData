@@ -5,7 +5,7 @@ import androidx.room.*
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-@Entity(tableName = "QuarterEntity", indices = [Index(value = ["quarterId"], unique = true)])
+@Entity(tableName = "Quarter_Entity", indices = [Index(value = ["quarterId"], unique = true)])
 data class EntityQuarter @Ignore constructor(
     @PrimaryKey(autoGenerate = true) var _autoQuarterId: Int = 0,
 

@@ -22,6 +22,7 @@ class DetailsActivity : AppCompatActivity() {
     private lateinit var binding: DetailsActivityScreenBinding
     private var actionBar: ActionBar? = null
     private lateinit var yearList: MutableList<EntityYear>
+    private var isFirstTime = true
     private var yearPos: Int = 0
     private var numPages = 1
     private var lastPos: Int = 0;
@@ -34,6 +35,8 @@ class DetailsActivity : AppCompatActivity() {
 
         val pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
         binding.pager.adapter = pagerAdapter
+        binding.pager.setCurrentItem(yearPos)
+        binding.pager.offscreenPageLimit = 1
     }
 
     private fun initialize() {
@@ -52,27 +55,28 @@ class DetailsActivity : AppCompatActivity() {
                 yearPos = intent.getIntExtra(INTENT_YEAR_POS, 0)
 
         }
-        binding.pager.setCurrentItem(yearPos, false)
-        binding.pager.offscreenPageLimit = 1
+
         binding.pager.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(
                 position: Int,
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
-
+                isFirstTime = false
             }
 
             override fun onPageSelected(position: Int) {
-                when {
-                    (yearPos < yearList.size - 1) && lastPos < position -> {
-                        yearPos = yearPos.plus(1)
+                if (!isFirstTime) {
+                    when {
+                        (yearPos < yearList.size - 1) && lastPos < position -> {
+                            yearPos = yearPos.plus(1)
+                        }
+                        (yearPos > -1) && lastPos > position -> {
+                            yearPos = yearPos.minus(1)
+                        }
                     }
-                    (yearPos > -1) && lastPos > position -> {
-                        yearPos = yearPos.minus(1)
-                    }
+                    lastPos = position
                 }
-                lastPos = position
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -102,7 +106,7 @@ class DetailsActivity : AppCompatActivity() {
 
         override fun getItem(position: Int): Fragment {
             val bundle = Bundle().apply {
-                putInt(INTENT_YEARS_ID, yearList[yearPos!!]._yearId)
+                putInt(INTENT_YEARS_ID, yearList[yearPos]._yearId)
             }
             return DetailsFragment().apply { arguments = bundle }
         }

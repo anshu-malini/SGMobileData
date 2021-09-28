@@ -20,7 +20,7 @@ data class EntityYear @Ignore constructor(
     var volumePerYear: Double? = 0.0,
 
     @SerializedName("quarter")
-    var quarter: MutableList<EntityQuarter>? = null
+    var quarter: MutableList<EntityQuarter?>? = null
 ): Parcelable {
     constructor() : this(0, "", 0.0, null)
 
