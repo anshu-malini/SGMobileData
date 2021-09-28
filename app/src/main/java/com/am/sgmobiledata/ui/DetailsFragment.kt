@@ -11,7 +11,9 @@ import com.am.sgmobiledata.data.model.EntityYear
 import com.am.sgmobiledata.data.repository.Repository
 import com.am.sgmobiledata.databinding.DetailsFragmentScreenBinding
 import com.am.sgmobiledata.databinding.DetailsQuaterListItemBinding
-import com.am.sgmobiledata.utils.INTENT_YEARS_ID
+import com.am.sgmobiledata.utils.INTENT_YEAR_ID
+import com.am.sgmobiledata.utils.INTENT_YEAR_NAME
+import com.am.sgmobiledata.utils.TrackingClass
 import com.am.sgmobiledata.viewmodel.DetailsViewModel
 import com.am.sgmobiledata.viewmodel.DetailsViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +42,7 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeValue()
-        arguments?.getInt(INTENT_YEARS_ID)?.let { viewModel.start(it) }
+        arguments?.getInt(INTENT_YEAR_ID)?.let { viewModel.start(it) }
         setObserver()
     }
 
@@ -74,6 +76,14 @@ class DetailsFragment : Fragment() {
                     includedView.addView(itemBinding.root)
                 }
             }
+        }
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+            val selectedYearName = arguments?.getString(INTENT_YEAR_NAME)
+            selectedYearName?.let { TrackingClass.setCurrentScreen(it) }
         }
     }
 
