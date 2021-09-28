@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.am.sgmobiledata.data.model.EntityYear
-import com.am.sgmobiledata.data.model.RecordsItem
 import com.am.sgmobiledata.databinding.HomeListItemBinding
 import javax.inject.Inject
 
@@ -38,7 +37,6 @@ class HomeAdapter @Inject constructor() :
             4 -> holder.binding.itemLayout.setBackgroundColor(Color.parseColor("#e6e6fa"))
             5 -> holder.binding.itemLayout.setBackgroundColor(Color.parseColor("#fffafa"))
         }
-
     }
 
     override fun getItemCount(): Int {

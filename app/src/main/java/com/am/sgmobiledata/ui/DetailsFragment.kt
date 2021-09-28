@@ -5,17 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.am.sgmobiledata.data.model.EntityYear
 import com.am.sgmobiledata.data.repository.Repository
 import com.am.sgmobiledata.databinding.DetailsFragmentScreenBinding
 import com.am.sgmobiledata.databinding.DetailsQuaterListItemBinding
 import com.am.sgmobiledata.utils.INTENT_YEARS_ID
-import com.am.sgmobiledata.utils.NetworkResult
 import com.am.sgmobiledata.viewmodel.DetailsViewModel
 import com.am.sgmobiledata.viewmodel.DetailsViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,31 +50,20 @@ class DetailsFragment : Fragment() {
     }
 
     private fun setObserver() {
-        viewModel.year.observe(viewLifecycleOwner, Observer {
-            when (it.status) {
-                NetworkResult.Status.SUCCESS -> {
-                    it.data?.let { yearEntity -> updateUI(yearEntity) }
-
-                }
-                NetworkResult.Status.ERROR -> {
-
-                }
-                NetworkResult.Status.LOADING -> {
-                }
-            }
-        })
+        lifecycleScope.launch(Dispatchers.Main) {
+            updateUI(viewModel.getYearData())
+        }
     }
 
     private fun updateUI(year: EntityYear) {
+        binding.itemText.text = "${year.yearName}"
 
-        (activity as DetailsActivity).setTitle("${year.yearName}")
-        binding.volumeDataText.text = "${String.format("%.4f", year.volumePerYear)}"
         val includedView = binding.linLayout
 
         val quarterList = year.quarter
         if (!quarterList.isNullOrEmpty()) {
             for (quarter in quarterList) {
-                if ((quarter.quarterName?.trim()?.length != 0) && (quarter.volumePerQuarter != 0.0)) {
+                if (quarter != null && (quarter.quarterName?.trim()?.length != 0) && (quarter.volumePerQuarter != 0.0)) {
                     val itemBinding: DetailsQuaterListItemBinding =
                         DetailsQuaterListItemBinding.inflate(layoutInflater)
 

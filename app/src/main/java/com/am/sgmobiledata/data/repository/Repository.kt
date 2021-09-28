@@ -6,6 +6,7 @@ import com.am.sgmobiledata.data.model.RecordsItem
 import com.am.sgmobiledata.data.remote.RemoteDataSource
 import com.am.sgmobiledata.data.room.MobileDataDao
 import com.am.sgmobiledata.utils.performGetOperation
+import com.am.sgmobiledata.utils.performSingleOperation
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
@@ -14,13 +15,10 @@ class Repository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: MobileDataDao
 ) {
-    fun getData(yearId: Int) = performGetOperation(
-        databaseQuery = { localDataSource.getYearLogs(yearId) },
-        networkCall = { remoteDataSource.getAllDataUsage() },
-        saveCallResult = {
-//            localDataSource.insert()
-        }
-    )
+    suspend fun getData(yearId: Int) =
+        performSingleOperation(databaseQuery = {
+            localDataSource.getYearLog(yearId)
+        })
 
     fun getAllData() = performGetOperation(
         databaseQuery = { localDataSource.getAllRecords() },
@@ -48,15 +46,14 @@ class Repository @Inject constructor(
                     newQuarter.volumePerQuarter =
                         record.volumeOfMobileData?.toDouble()
                     newQuarter.quarterId = record.id
-                    dao.insertQuarter(newQuarter)
 
-                    firstYearEntry.quarter = mutableListOf(EntityQuarter())
-                    firstYearEntry.quarter?.add(newQuarter)
+                    firstYearEntry.quarter =
+                        mutableListOf(dao.getQuarter(dao.insertQuarter(newQuarter)))
                     dao.insertYear(firstYearEntry)
 
                 } else {
                     val alreadyExist =
-                        yearLogs.any { x -> x.yearName?.equals(quarArr?.get(0))!! }
+                        yearLogs.any { year -> year.yearName?.equals(quarArr?.get(0))!! }
                     if (alreadyExist) {
                         yearLogs.forEach { entityYear ->
                             if (entityYear.yearName.equals(quarArr?.get(0))) {
@@ -72,10 +69,9 @@ class Repository @Inject constructor(
                                     newQuarter.volumePerQuarter =
                                         record.volumeOfMobileData?.toDouble()
                                     newQuarter.quarterId = record.id
-                                    dao.insertQuarter(newQuarter)
 
                                     entityObj.quarter?.also {
-                                        it.add(newQuarter)
+                                        it.add(dao.getQuarter(dao.insertQuarter(newQuarter)))
                                     }
                                 }
                                 dao.updateYear(entityYear)
@@ -90,10 +86,10 @@ class Repository @Inject constructor(
                         newYearQuarter.volumePerQuarter =
                             record.volumeOfMobileData?.toDouble()
                         newYearQuarter.quarterId = record.id
-                        dao.insertQuarter(newYearQuarter)
 
-                        newYear.quarter = mutableListOf(EntityQuarter())
-                        newYear.quarter?.add(newYearQuarter)
+                        newYear.quarter =
+                            mutableListOf(dao.getQuarter(dao.insertQuarter(newYearQuarter)))
+
                         dao.insertYear(newYear)
                     }
                 }
