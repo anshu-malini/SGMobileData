@@ -22,6 +22,7 @@ class DetailsActivity : AppCompatActivity() {
     private lateinit var binding: DetailsActivityScreenBinding
     private var actionBar: ActionBar? = null
     private lateinit var yearList: MutableList<EntityYear>
+    private lateinit var pagerAdapter: ScreenSlidePagerAdapter
     private var isFirstTime = true
     private var yearPos: Int = 0
     private var numPages = 1
@@ -33,9 +34,10 @@ class DetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
         initialize()
 
-        val pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
+        pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
         binding.pager.adapter = pagerAdapter
         binding.pager.setCurrentItem(yearPos)
+        lastPos = yearPos
         binding.pager.offscreenPageLimit = 1
     }
 
@@ -77,6 +79,7 @@ class DetailsActivity : AppCompatActivity() {
                     }
                     lastPos = position
                 }
+                pagerAdapter.notifyDataSetChanged()
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -109,6 +112,10 @@ class DetailsActivity : AppCompatActivity() {
                 putInt(INTENT_YEARS_ID, yearList[yearPos]._yearId)
             }
             return DetailsFragment().apply { arguments = bundle }
+        }
+
+        override fun getItemPosition(`object`: Any): Int {
+            return POSITION_NONE
         }
     }
 }
