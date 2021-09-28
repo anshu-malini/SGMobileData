@@ -11,7 +11,8 @@ import androidx.viewpager.widget.ViewPager
 import com.am.sgmobiledata.data.model.EntityYear
 import com.am.sgmobiledata.databinding.DetailsActivityScreenBinding
 import com.am.sgmobiledata.utils.INTENT_YEARS_BUNDLE
-import com.am.sgmobiledata.utils.INTENT_YEARS_ID
+import com.am.sgmobiledata.utils.INTENT_YEAR_ID
+import com.am.sgmobiledata.utils.INTENT_YEAR_NAME
 import com.am.sgmobiledata.utils.INTENT_YEAR_POS
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -109,7 +110,8 @@ class DetailsActivity : AppCompatActivity() {
 
         override fun getItem(position: Int): Fragment {
             val bundle = Bundle().apply {
-                putInt(INTENT_YEARS_ID, yearList[yearPos]._yearId)
+                putInt(INTENT_YEAR_ID, yearList[yearPos]._yearId)
+                putString(INTENT_YEAR_NAME, yearList[yearPos].yearName)
             }
             return DetailsFragment().apply { arguments = bundle }
         }
